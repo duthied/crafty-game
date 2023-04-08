@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SwordAttack : MonoBehaviour {
 
+  public Collider2D swordCollider;
+
   public float damage = 3;
 
   public enum AttackDirection{
@@ -12,26 +14,28 @@ public class SwordAttack : MonoBehaviour {
 
   public AttackDirection attackDirection;
 
-  Collider2D swordCollider;
+  // Collider2D swordCollider;
   Vector2 rightAttackOffset;
 
   // Start is called before the first frame update
   void Start() {
-    swordCollider = GetComponent<Collider2D>();
+    // swordCollider = GetComponent<Collider2D>();
     rightAttackOffset = transform.position;
   }
 
   public void AttackRight() {
-    print("Attack right");
+    print("SwordAttack::Attack right");
     swordCollider.enabled = true;
-    transform.position = rightAttackOffset;
+    transform.localPosition = rightAttackOffset;
   }
   public void AttackLeft() {
-    print("Attack left");
+    print("SwordAttack::Attack left");
     swordCollider.enabled = true;
-    transform.position = new Vector2(rightAttackOffset.x * -1, rightAttackOffset.y);
+    transform.localPosition = new Vector2(rightAttackOffset.x * -1, rightAttackOffset.y);
   }
   public void StopAttack() {
+    print("  SwordAttack::StopAttack");
+
     swordCollider.enabled = false;
   }
 
@@ -41,7 +45,7 @@ public class SwordAttack : MonoBehaviour {
       EnemyController enemy = other.GetComponent<EnemyController>();
       if (enemy != null) {
 
-        print("damage!");
+        print("SwordAttack::damage!");
 
         enemy.TakeDamage(damage);
       }

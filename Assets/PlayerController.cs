@@ -68,11 +68,15 @@ public class PlayerController : MonoBehaviour{
 
   void OnMove(InputValue movementValue) => movementInput = movementValue.Get<Vector2>();
   void OnFire() {
+    // for the animation to transition to weapon affect
     animator.SetTrigger("swordAttack");
   }
 
   // rename this to not be specific to a weapon
-  public void SwordAttack() {
+  public void Attack() {
+
+    print("Player::Attack");
+
     if (spriteRenderer.flipX == true) {
       swordAttack.AttackLeft();
     } else {
@@ -81,6 +85,8 @@ public class PlayerController : MonoBehaviour{
   }
 
   public void EndAttack(){
+    print("EndAttack");
+
     swordAttack.StopAttack();
   }
 
