@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour {
   
-  public float health = 1;
-  // public int attitude = (int) attitudes.idle;
+  public float health = 10;
   public float movementSpeed;
-  // public Transform currentTarget;
   public float minDistance;
-
-  // Transform player;
 
   public float Health {
     set {
@@ -25,12 +21,11 @@ public class EnemyController : MonoBehaviour {
   }
 
   public string attitude = "idle";
-
-  // enum attitudes {
-  //   angry,
-  //   scared,
-  //   idle
-  // }
+  private string[] attitudes = {
+    "idle",
+    "scared",
+    "angry"
+  };
 
   GameObject Player;
 
@@ -40,6 +35,12 @@ public class EnemyController : MonoBehaviour {
     // defaults
     movementSpeed = 0.2F;
     minDistance = 0.3F;
+
+    // what is my mood?
+    int i = Random.Range(0, attitudes.Length);
+    attitude = attitudes[i];
+
+    GetComponentInChildren<TextMesh>().text = attitude;
   }
 
   private void Update() {
@@ -80,6 +81,7 @@ public class EnemyController : MonoBehaviour {
 
   public void TakeDamage(float damage) {
     Health -= damage;
+    attitude = "scared";
   }
 
   public void Death() {
