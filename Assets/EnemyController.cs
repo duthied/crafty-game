@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour {
 
   public float minDistance;
   private float escapeDistance = 0.5F;
-  private float chaseDistance = 0.1F;
+  // private float chaseDistance = 0.1F;
 
   public float Health {
     set {
