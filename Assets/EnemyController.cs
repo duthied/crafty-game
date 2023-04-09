@@ -24,6 +24,8 @@ public class EnemyController : MonoBehaviour {
     }
   }
 
+  public string attitude = "idle";
+
   // enum attitudes {
   //   angry,
   //   scared,
@@ -42,17 +44,38 @@ public class EnemyController : MonoBehaviour {
 
   private void Update() {
 
-    float dist_ = Vector3.Distance(Player.transform.position, transform.position); //find distance
-    
-    if (Vector2.Distance(transform.position, Player.transform.position) > minDistance) {
+    switch (attitude) {
+      case "idle":
+        break;
 
-      // print("Moving!");
-      transform.position = Vector2.MoveTowards(transform.position, 
-                                                Player.transform.position, 
-                                                movementSpeed * Time.deltaTime);
-    } else {
-      // do something?
+      case "angry":
+        // do we need to move?
+        if (Vector2.Distance(transform.position, Player.transform.position) > minDistance) {
+          // move
+          transform.position = Vector2.MoveTowards(transform.position, 
+                                                    Player.transform.position, 
+                                                    movementSpeed * Time.deltaTime);
+        } else {
+          // no need to move, already here!
+          // now what?
+        }
+        break;
+
+      case "scared":
+        // do we need to move?
+        if (Vector2.Distance(transform.position, Player.transform.position) < minDistance) {
+          // move
+          transform.position = Vector2.MoveTowards(transform.position, 
+                                                    Player.transform.position, 
+                                                    -movementSpeed * Time.deltaTime);
+        } else {
+          // no need to move, already here!
+          // now what?
+        }
+        break;
+      // default:
     }
+
   }
 
   public void TakeDamage(float damage) {
