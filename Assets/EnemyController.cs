@@ -35,10 +35,12 @@ public class EnemyController : MonoBehaviour {
 
   GameObject Player;
   TextMesh label;
+  Animator animator;
 
   void Start() {
     Player = GameObject.FindGameObjectWithTag("Player");
     label = GetComponentInChildren<TextMesh>();
+    animator = GetComponent<Animator>();
 
     // defaults
     movementSpeed = 0.3F;
@@ -46,8 +48,8 @@ public class EnemyController : MonoBehaviour {
     health = 10;
 
     // what is my mood?
-    int i = Random.Range(0, attitudes.Length);
-    attitude = attitudes[i];
+    // int i = Random.Range(0, attitudes.Length);
+    attitude = attitudes[2];
     label.text = attitude + " " + health;
   }
 
@@ -55,16 +57,20 @@ public class EnemyController : MonoBehaviour {
 
     switch (attitude) {
       case "idle":
+        animator.SetBool("isMoving", false);
         break;
 
       case "persue":
         // do we need to move?
         if (Vector2.Distance(transform.position, Player.transform.position) > minDistance) {
+          animator.SetBool("isMoving", true);
           // move
           transform.position = Vector2.MoveTowards(transform.position, 
                                                     Player.transform.position, 
                                                     chaseSpeed * Time.deltaTime);
         } else {
+          animator.SetBool("isMoving", false);
+
           // no need to move, already here!
           // now what?
         }
@@ -73,12 +79,15 @@ public class EnemyController : MonoBehaviour {
       case "escape":
         // do we need to move?
         // speed up
+        animator.SetBool("isMoving", true);
         if (Vector2.Distance(transform.position, Player.transform.position) < escapeDistance) {
           // move
           transform.position = Vector2.MoveTowards(transform.position, 
                                                     Player.transform.position, 
                                                     -escapeSpeed * Time.deltaTime);
         } else {
+          animator.SetBool("isMoving", false);
+
           // no need to move, already here!
           // now what?
         }
