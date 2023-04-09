@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour{
   }
 
   private bool TryMove(Vector2 direction) {
+
     if (direction != Vector2.zero) {
       int count = rigidBody.Cast(movementInput,
                      movementFilter,
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviour{
   }
 
   void OnMove(InputValue movementValue) => movementInput = movementValue.Get<Vector2>();
+
   void OnFire() {
     // for the animation to transition to weapon affect
     animator.SetTrigger("swordAttack");
@@ -74,9 +76,6 @@ public class PlayerController : MonoBehaviour{
 
   // rename this to not be specific to a weapon
   public void Attack() {
-
-    print("Player::Attack");
-
     if (spriteRenderer.flipX == true) {
       swordAttack.AttackLeft();
     } else {
@@ -85,8 +84,6 @@ public class PlayerController : MonoBehaviour{
   }
 
   public void EndAttack(){
-    print("EndAttack");
-
     swordAttack.StopAttack();
   }
 
