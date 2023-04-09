@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour {
   
-  public float health = 10;
+  public float health;
+
   public float movementSpeed;
+  private float escapeSpeed = 0.6F;
+  private float chaseSpeed = 0.4F;
+
   public float minDistance;
+  private float escapeDistance = 0.5F;
+  private float chaseDistance = 0.1F;
 
   public float Health {
     set {
@@ -23,24 +29,26 @@ public class EnemyController : MonoBehaviour {
   public string attitude = "idle";
   private string[] attitudes = {
     "idle",
-    "scared",
-    "angry"
+    "escape",
+    "persue"
   };
 
   GameObject Player;
+  TextMesh label;
 
   void Start() {
     Player = GameObject.FindGameObjectWithTag("Player");
+    label = GetComponentInChildren<TextMesh>();
 
     // defaults
-    movementSpeed = 0.2F;
+    movementSpeed = 0.3F;
     minDistance = 0.3F;
+    health = 10;
 
     // what is my mood?
     int i = Random.Range(0, attitudes.Length);
     attitude = attitudes[i];
-
-    GetComponentInChildren<TextMesh>().text = attitude;
+    label.text = attitude + " " + health;
   }
 
   private void Update() {
@@ -49,26 +57,27 @@ public class EnemyController : MonoBehaviour {
       case "idle":
         break;
 
-      case "angry":
+      case "persue":
         // do we need to move?
         if (Vector2.Distance(transform.position, Player.transform.position) > minDistance) {
           // move
           transform.position = Vector2.MoveTowards(transform.position, 
                                                     Player.transform.position, 
-                                                    movementSpeed * Time.deltaTime);
+                                                    chaseSpeed * Time.deltaTime);
         } else {
           // no need to move, already here!
           // now what?
         }
         break;
 
-      case "scared":
+      case "escape":
         // do we need to move?
-        if (Vector2.Distance(transform.position, Player.transform.position) < minDistance) {
+        // speed up
+        if (Vector2.Distance(transform.position, Player.transform.position) < escapeDistance) {
           // move
           transform.position = Vector2.MoveTowards(transform.position, 
                                                     Player.transform.position, 
-                                                    -movementSpeed * Time.deltaTime);
+                                                    -escapeSpeed * Time.deltaTime);
         } else {
           // no need to move, already here!
           // now what?
@@ -77,11 +86,18 @@ public class EnemyController : MonoBehaviour {
       // default:
     }
 
+    // update text mesh
+  
+
   }
 
   public void TakeDamage(float damage) {
     Health -= damage;
-    attitude = "scared";
+
+    // randomly change attitude
+    int i = Random.Range(0, attitudes.Length);
+    attitude = attitudes[i];
+    label.text = attitude + " " + health;
   }
 
   public void Death() {
