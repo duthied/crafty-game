@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DD;
 
 public class SwordAttack : MonoBehaviour {
 
   public Collider2D swordCollider;
 
-  public float damage = 3;
+  public float damage = 3f;
+  public float knockbackForce = 500f;
 
   public enum AttackDirection{
     left, right
@@ -14,7 +16,7 @@ public class SwordAttack : MonoBehaviour {
 
   public AttackDirection attackDirection;
   Vector2 rightAttackOffset;
-  
+
   // Start is called before the first frame update
   void Start() {
     rightAttackOffset = transform.position;
@@ -32,13 +34,28 @@ public class SwordAttack : MonoBehaviour {
     swordCollider.enabled = false;
   }
 
-  private void OnTriggerEnter2D(Collider2D other) {
-    if(other.tag == "Enemy") {
+  private void OnTriggerEnter2D(Collider2D collider) {
+
+    IDamageable damageableObject = collider.GetComponent<IDamageable>();
+    if (damageableObject != null) {
+      if(collider.tag == "Enemy") {
       // handle
-      EnemyController enemy = other.GetComponent<EnemyController>();
+      EnemyController enemy = collider.GetComponent<EnemyController>();
       if (enemy != null) {
-        enemy.TakeDamage(damage);
+
+        // calculation direction and force
+        Vector3 parentPosition = gameObject.GetComponentInParent<Transform>().position;
+        Vector2 direction = (Vector2) (parentPosition + collider.gameObject.transform.position).normalized;
+        Vector2 knockback = direction * knockbackForce;
+
+        // Debug.Log("direction: " + direction + " knockback: "+ knockback);
+
+        damageableObject.onHit(damage, knockback);
       }
+    }
+    } else {
+      // isn't damageable
+      Debug.Log(name + " doesn't have IDamageable");
     }
   }
 }

@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using DD;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour {
+
+public class EnemyController : MonoBehaviour, IDamageable
+{
   
-  public float health;
+  private float _health;
+  private bool _targettable;
 
   public float movementSpeed;
-  private float escapeSpeed = 0.6F;
+  private float escapeSpeed = 0.2F;
   private float chaseSpeed = 0.4F;
 
   public float minDistance;
@@ -16,13 +20,27 @@ public class EnemyController : MonoBehaviour {
 
   public float Health {
     set {
-      health = value;
-      if(health <= 0){
-        Death();
+
+      Debug.Log("value: " + value + " _health: " + _health);
+
+      _health = value;
+      if(_health <= 0){
+        animator.SetTrigger("death");
       }
+    
     }
     get {
-      return health;
+      return _health;
+    }
+  }
+
+  public bool targetable { 
+    set {
+      _targettable = value;
+      rb.simulated = value;
+    }
+    get {
+      return _targettable;
     }
   }
 
@@ -36,21 +54,23 @@ public class EnemyController : MonoBehaviour {
   GameObject Player;
   TextMesh label;
   Animator animator;
+  Rigidbody2D rb;
 
   void Start() {
     Player = GameObject.FindGameObjectWithTag("Player");
     label = GetComponentInChildren<TextMesh>();
     animator = GetComponent<Animator>();
+    rb = GetComponent<Rigidbody2D>();
 
     // defaults
     movementSpeed = 0.3F;
     minDistance = 0.3F;
-    health = 10;
+    _health = 10;
 
     // what is my mood?
     // int i = Random.Range(0, attitudes.Length);
-    attitude = attitudes[2];
-    label.text = attitude + " " + health;
+    attitude = attitudes[0];
+    // label.text = attitude + " " + _health;
   }
 
   private void Update() {
@@ -100,18 +120,46 @@ public class EnemyController : MonoBehaviour {
 
   }
 
+  public void TakeDamage(float damage, Vector2 knockback) {
+    Health -= damage;
+
+    Debug.Log("TakeDamage: " + damage);
+
+    // do the knockback thing
+    // rb.AddForce(knockback);
+    // rb.MovePosition(rb.position + knockback * 1f * Time.fixedDeltaTime);
+    rb.transform.position = Vector2.MoveTowards(rb.transform.position, 
+                                                  knockback, 
+                                                  escapeSpeed * Time.deltaTime);
+
+    // rb.(knockback);
+
+    // randomly change attitude
+    // int i = Random.Range(0, attitudes.Length);
+    // attitude = attitudes[i];
+    // label.text = attitude + " " + _health;
+  }
   public void TakeDamage(float damage) {
     Health -= damage;
 
     // randomly change attitude
-    int i = Random.Range(0, attitudes.Length);
-    attitude = attitudes[i];
-    label.text = attitude + " " + health;
+    // int i = Random.Range(0, attitudes.Length);
+    // attitude = attitudes[i];
+    // label.text = attitude + " " + _health;
   }
 
   public void Death() {
-    print("He killed me Mal, a guy...with a sword!");
     Destroy(gameObject);
+  }
+
+  public void onHit(float damageSent, Vector2 knockback) {
+    animator.SetTrigger("hit");
+    TakeDamage(damageSent, knockback);
+  }
+
+  public void onHit(float damageSent) {
+    animator.SetTrigger("hit");
+    TakeDamage(damageSent);
   }
 
 }
