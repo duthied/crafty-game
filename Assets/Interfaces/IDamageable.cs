@@ -5,7 +5,7 @@ namespace DD {
     public float Health { set; get; }
     public void onHit(float damageSent, Vector2 knockback);
     public void onHit(float damageSent);
-    public bool targetable { set; get; }
+    public bool Targetable { set; get; }
     public void Death();
 
   }

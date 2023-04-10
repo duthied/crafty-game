@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 6969109639307442734}
   - component: {fileID: 1676937428551984745}
   - component: {fileID: 6054775105956636331}
+  - component: {fileID: 8528664842133011501}
   m_Layer: 0
   m_Name: Slimer
   m_TagString: Enemy
@@ -236,7 +237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f14dbe77f20404e946e79f8e6d4112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1
   movementSpeed: 0
   minDistance: 0
   attitude: idle
@@ -276,3 +276,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8528664842133011501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8238911042874867620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e13fc371e553472d86646295de203ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
